@@ -28,5 +28,5 @@ jobs:
       - name: Upload click package artifact
         uses: actions/upload-artifact@v2
         with:
-          name: costumemaster_reloaded_click
-          path: clickable/build/**.click
+          name: pixelorama_click
+          path: build/**.click
