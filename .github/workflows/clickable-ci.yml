@@ -1,0 +1,32 @@
+name: Clickable (CI)
+on: push
+
+jobs:
+  build:
+    name: Create clickable package
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        architectures:
+          - armhf
+          - arm64
+    steps:
+      - name: Clone source
+        uses: actions/checkout@v2
+      - name: Install clickable dependencies
+        run: |
+          sudo add-apt-repository ppa:bhdouglass/clickable
+          sudo apt update
+          sudo apt install -y containerd docker.io runc clickable
+          sudo systemctl unmask docker.service
+          sudo systemctl start docker.service
+      - name: Run Clickable
+        run: |
+          clickable build
+        env:
+          CLICKABLE_ARCH: ${{ matrix.architectures }}
+      - name: Upload click package artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: costumemaster_reloaded_click
+          path: clickable/build/**.click
